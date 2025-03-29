@@ -7,3 +7,5 @@ jobs:
     steps:
       - name: Hello world action step
         uses: aramikuto/next-build-stats@test-run
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
