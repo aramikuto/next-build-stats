@@ -1,9 +1,7 @@
-node_modules/bun-types
-node_modules/.bin
+# dependencies (bun install)
+node_modules
 
 # output
-out
-dist
 *.tgz
 
 # code coverage
