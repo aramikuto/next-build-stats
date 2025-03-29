@@ -1,11 +1,11 @@
-on: [push]
+on: [pull_request]
 
 jobs:
   test_run_job:
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     name: A test run
     steps:
       - name: Hello world action step
         uses: aramikuto/next-build-stats@test-run
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
