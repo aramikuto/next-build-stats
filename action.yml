@@ -1,0 +1,9 @@
+name: 'Next.js build stats'
+description: 'Analyzes Next.js build output and comments on pull requests with page size and type for each route'
+inputs:
+  github-token:
+    description: 'GitHub token to publish comments'
+    required: true
+runs:
+  using: 'node20'
+  main: 'src/main.js'
