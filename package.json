@@ -6,7 +6,8 @@
 	"main": "dist/main.js",
 	"type": "module",
 	"scripts": {
-		"build": "bun build src/main.js --outdir=dist --platform=node --target=node --minify"
+		"build": "bun build src/main.js --outdir=dist --platform=node --target=node --minify",
+		"test": "bun test"
 	},
 	"dependencies": {
 		"@actions/core": "^1.11.1",

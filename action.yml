@@ -5,6 +5,15 @@ inputs:
     description: 'GitHub token to publish comments. Default: \$\{\{ github.token \}\}'
     required: true
     default: ${{ github.token }}
+  build-log-file:
+    description: 'Path to the Next.js build log file.'
+    required: true
+  dependency-install-time-in-ms:
+    description: 'Time taken to install dependencies in milliseconds.'
+    required: false
+  build-time-in-ms:
+    description: 'Time taken to build the Next.js app in milliseconds.'
+    required: false
 runs:
   using: 'node20'
   main: 'dist/main.js'
