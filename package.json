@@ -6,7 +6,7 @@
 	"main": "dist/main.js",
 	"type": "module",
 	"scripts": {
-		"build": "bun build src/main.js --outdir=dist --platform=node --target=node"
+		"build": "bun build src/main.js --outdir=dist --platform=node --target=node --minify"
 	},
 	"dependencies": {
 		"@actions/core": "^1.11.1",
@@ -14,8 +14,9 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.0.0-beta.1",
-		"@types/bun": "latest",
-		"esbuild": "^0.25.1",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
 		"typescript": "^5"
 	}
 }
