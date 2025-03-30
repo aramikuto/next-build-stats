@@ -1,0 +1,47 @@
+# on:
+#   schedule:
+#     # Every Friday at 20:00 UTC
+#     - cron: '0 20 * * 5'
+on: [pull_request]
+
+name: Test Next.js Canary Compatibility
+
+jobs:
+  test_build_on_next_canary:
+    runs-on: ubuntu-latest
+    name: Test Build on Next.js Canary
+    defaults:
+      run:
+        working-directory: ./src/test-next-app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: test-run
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install canary version of Next.js
+        run: |
+          npm install next@canary react@latest react-dom@latest typescript @types/node
+      - name: Build Next.js app
+        run: |
+          npm run build | tee build.log
+      - name: Run Next.js build stats action
+        id: next-build-stats
+        uses: aramikuto/next-build-stats@test-run
+        with:
+          build-log-file: ./src/test-next-app/build.log
+          dry-run: true
+      - name: Check action output
+        env:
+          ROUTE_STATS: ${{ steps.next-build-stats.outputs.route-stats }}
+        run: |
+          echo "Build log file:"
+          echo "=================="
+          echo "$ROUTE_STATS"
+          echo "=================="
+          echo ""
+          echo "Checking that output matches expected output..."
+          node --test

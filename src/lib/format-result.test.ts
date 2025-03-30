@@ -32,7 +32,7 @@ describe("formatResult", () => {
     ];
 
     expect(formatResult(routeSizes)).toMatchInlineSnapshot(`
-      "# Build Output
+      "# Build Stats
 
       ## Route Sizes
 
@@ -61,7 +61,7 @@ describe("formatResult", () => {
         buildTimeInMS: 5678,
       })
     ).toMatchInlineSnapshot(`
-      "# Build Output
+      "# Build Stats
 
       ## Route Sizes
 
@@ -80,7 +80,7 @@ describe("formatResult", () => {
         depndencyInstallTimeInMS: 1234,
       })
     ).toMatchInlineSnapshot(`
-      "# Build Output
+      "# Build Stats
 
       ## Route Sizes
 
@@ -98,7 +98,7 @@ describe("formatResult", () => {
         buildTimeInMS: 5678,
       })
     ).toMatchInlineSnapshot(`
-      "# Build Output
+      "# Build Stats
 
       ## Route Sizes
 

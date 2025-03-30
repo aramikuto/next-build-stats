@@ -5,6 +5,7 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleDetection": "force",
+		"jsx": "preserve",
 
 		// Bundler mode
 		"moduleResolution": "bundler",
@@ -24,5 +25,5 @@
 		"noPropertyAccessFromIndexSignature": false
 	},
 	"include": ["src"],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules", ".next"]
 }

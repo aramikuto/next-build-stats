@@ -1,6 +1,13 @@
 {
 	"name": "next-build-stats",
 	"author": "Aleksandr Kondrashov",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/aramikuto/next-build-stats.git"
+	},
+	"bugs": {
+		"url": "https://github.com/aramikuto/next-build-stats.git/issues"
+	},
 	"license": "MIT",
 	"private": true,
 	"main": "dist/main.js",

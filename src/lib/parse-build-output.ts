@@ -12,9 +12,11 @@ export type RouteSizes = {
   firstLoadSizeInBytes: number;
 }[];
 
-export async function parseBuildOutput(
-  input: string
-): Promise<{ res: RouteSizes; warnings: string[] }> {
+export async function parseBuildOutput(input: string): Promise<{
+  res: RouteSizes;
+  inferredBuildTimeMs: number | undefined;
+  warnings: string[];
+}> {
   const lines = input.split("\n").map((line) => line.trimStart());
 
   // Locate the start of the "Route" section
@@ -80,9 +82,18 @@ export async function parseBuildOutput(
       }
     }
   }
-  warnings.push(`test warning: **This is a test warning**`);
+  let inferredBuildTimeMs: number | undefined;
+  if (
+    lines.at(-1)?.startsWith("sys ") &&
+    lines.at(-2)?.startsWith("user ") &&
+    lines.at(-3)?.startsWith("real ")
+  ) {
+    const realTimeLine = lines.at(-3)!;
+    const buildTimeMatch = Number.parseFloat(realTimeLine.slice(4));
+    inferredBuildTimeMs = buildTimeMatch * 1000;
+  }
 
-  return { res, warnings };
+  return { res, inferredBuildTimeMs, warnings };
 }
 
 function parseSize(sizeString: string): number {

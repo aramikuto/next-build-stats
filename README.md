@@ -1,15 +1,1 @@
-# next-build-stats
-
-To install dependencies:
-
-```bash
-bun install
-```
-
-To run:
-
-```bash
-bun run src/index.js
-```
-
-This project was created using `bun init` in bun v1.2.7. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+[![.github/workflows/check-canary-next-compatibility.yml](https://github.com/aramikuto/next-build-stats/actions/workflows/check-canary-next-compatibility.yml/badge.svg)](https://github.com/aramikuto/next-build-stats/actions/workflows/check-canary-next-compatibility.yml)

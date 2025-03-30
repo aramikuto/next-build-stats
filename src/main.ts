@@ -9,8 +9,9 @@ async function run() {
     const token = core.getInput("github-token");
     const dependencyInstallTimeInMS =
       core.getInput("dependency-install-time-in-ms") || undefined;
-    const buildTimeInMS = core.getInput("build-time-in-ms") || undefined;
+    let buildTimeInMS = core.getInput("build-time-in-ms") || undefined;
     const buildLogFilePath = core.getInput("build-log-file");
+    const isDryRun = core.getInput("dry-run") === "true";
 
     const octokit = github.getOctokit(token);
 
@@ -19,29 +20,48 @@ async function run() {
 
     const buildLogsContent = await readFile(buildLogFilePath, "utf-8");
 
-    const { res, warnings } = await parseBuildOutput(buildLogsContent);
+    const {
+      res: routeStats,
+      inferredBuildTimeMs,
+      warnings,
+    } = await parseBuildOutput(buildLogsContent);
+
+    if (inferredBuildTimeMs) {
+      if (buildTimeInMS !== undefined) {
+        core.warning(
+          `Build log contains build time, but build-time-in-ms is also set. Ignoring the build time from the log.`
+        );
+      } else {
+        buildTimeInMS = inferredBuildTimeMs.toString();
+      }
+    }
 
     if (warnings.length > 0) {
       core.warning(
-        `There was a warning while parsing the build output: ${warnings.join(
-          ", "
-        )}`
+        `There was a warning while parsing the build output:
+        ${warnings.join(", ")}
+        
+        Please report this issue here https://github.com/aramikuto/next-build-stats/issues`
       );
     }
 
-    const actionResult = formatResult(res, {
+    const actionResult = formatResult(routeStats, {
       depndencyInstallTimeInMS: dependencyInstallTimeInMS
         ? Number(dependencyInstallTimeInMS)
         : undefined,
       buildTimeInMS: buildTimeInMS ? Number(buildTimeInMS) : undefined,
     });
 
-    await octokit.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number: pull_number,
-      body: actionResult,
-    });
+    core.setOutput("route-stats", JSON.stringify(routeStats));
+
+    if (!isDryRun) {
+      await octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: pull_number,
+        body: actionResult,
+      });
+    }
   } catch (error) {
     let errorMessage: string;
     if (error instanceof Error) {
