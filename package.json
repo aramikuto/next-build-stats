@@ -1,30 +1,31 @@
 {
-	"name": "next-build-stats",
-	"author": "Aleksandr Kondrashov",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/aramikuto/next-build-stats.git"
-	},
-	"bugs": {
-		"url": "https://github.com/aramikuto/next-build-stats.git/issues"
-	},
-	"license": "MIT",
-	"private": true,
-	"main": "dist/main.js",
-	"type": "module",
-	"scripts": {
-		"build": "bun build src/main.js --outdir=dist --platform=node --target=node --minify",
-		"test": "bun test"
-	},
-	"dependencies": {
-		"@actions/core": "^1.11.1",
-		"@actions/github": "^6.0.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.0.0-beta.1",
-		"@types/bun": "latest"
-	},
-	"peerDependencies": {
-		"typescript": "^5"
-	}
+  "name": "next-build-stats",
+  "author": "Aleksandr Kondrashov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aramikuto/next-build-stats.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aramikuto/next-build-stats.git/issues"
+  },
+  "license": "MIT",
+  "private": true,
+  "main": "dist/main.js",
+  "type": "module",
+  "scripts": {
+    "check": "biome ci",
+    "test": "bun test",
+    "build": "bun build src/main.js --outdir=dist --platform=node --target=node --minify"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.0-beta.1",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
 }

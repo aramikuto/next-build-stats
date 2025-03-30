@@ -25,7 +25,7 @@ Route (app)                                 Size  First Load JS
 
 
 ○  (Static)  prerendered as static content
-        `)
+`),
     ).resolves.toMatchInlineSnapshot(`
       {
         "inferredBuildTimeMs": undefined,
@@ -82,7 +82,7 @@ Route (app)                                 Size  First Load JS
      real 9.46
      user 13.86
      sys 1.57
-     `)
+     `),
     ).resolves.toMatchInlineSnapshot(`
       {
         "inferredBuildTimeMs": 9460,
@@ -153,7 +153,7 @@ Route (pages)                              Size     First Load JS
   └ css/ead5f2697f8080a6.css               1.67 kB
 
 λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
-○  (Static)  automatically rendered as static HTML (uses no initial props)`)
+○  (Static)  automatically rendered as static HTML (uses no initial props)`),
     ).resolves.toMatchInlineSnapshot(`
       {
         "inferredBuildTimeMs": undefined,

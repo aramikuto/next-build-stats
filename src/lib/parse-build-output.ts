@@ -7,7 +7,7 @@ const ROUTE_TYPES = Object.freeze({
 });
 
 function determineRouteType(
-  typeSymbol: string
+  typeSymbol: string,
 ): (typeof ROUTE_TYPES)[keyof typeof ROUTE_TYPES] {
   if (ROUTE_TYPES[typeSymbol as keyof typeof ROUTE_TYPES]) {
     return ROUTE_TYPES[typeSymbol as keyof typeof ROUTE_TYPES];
@@ -31,7 +31,8 @@ export async function parseBuildOutput(input: string): Promise<{
 
   // Locate the start of the "Route" section
   const routeStartIndex = lines.findIndex(
-    (line) => line.startsWith("Route (app)") || line.startsWith("Route (pages)")
+    (line) =>
+      line.startsWith("Route (app)") || line.startsWith("Route (pages)"),
   );
   if (routeStartIndex === -1) {
     throw new Error("Route section not found in the build log.");

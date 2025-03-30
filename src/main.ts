@@ -1,8 +1,8 @@
+import { readFile } from "node:fs/promises";
 import core from "@actions/core";
 import github from "@actions/github";
-import { readFile } from "node:fs/promises";
-import { parseBuildOutput } from "./lib/parse-build-output";
 import { formatResult } from "./lib/format-result";
+import { parseBuildOutput } from "./lib/parse-build-output";
 
 async function run() {
   try {
@@ -29,7 +29,7 @@ async function run() {
     if (inferredBuildTimeMs) {
       if (buildTimeInMS !== undefined) {
         core.warning(
-          `Build log contains build time, but build-time-in-ms is also set. Ignoring the build time from the log.`
+          `Build log contains build time, but build-time-in-ms is also set. Ignoring the build time from the log.`,
         );
       } else {
         buildTimeInMS = inferredBuildTimeMs.toString();
@@ -41,7 +41,7 @@ async function run() {
         `There was a warning while parsing the build output:
         ${warnings.join(", ")}
         
-        Please report this issue here https://github.com/aramikuto/next-build-stats/issues`
+        Please report this issue here https://github.com/aramikuto/next-build-stats/issues`,
       );
     }
 

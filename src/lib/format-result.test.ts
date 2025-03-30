@@ -1,4 +1,4 @@
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import { formatResult } from "./format-result";
 import type { RouteSizes } from "./parse-build-output";
 
@@ -59,7 +59,7 @@ describe("formatResult", () => {
       formatResult(routeSizes, {
         depndencyInstallTimeInMS: 0,
         buildTimeInMS: 5678,
-      })
+      }),
     ).toMatchInlineSnapshot(`
       "# Build Stats
 
@@ -78,7 +78,7 @@ describe("formatResult", () => {
     expect(
       formatResult(routeSizes, {
         depndencyInstallTimeInMS: 1234,
-      })
+      }),
     ).toMatchInlineSnapshot(`
       "# Build Stats
 
@@ -96,7 +96,7 @@ describe("formatResult", () => {
     expect(
       formatResult(routeSizes, {
         buildTimeInMS: 5678,
-      })
+      }),
     ).toMatchInlineSnapshot(`
       "# Build Stats
 
