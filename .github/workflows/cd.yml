@@ -1,0 +1,82 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+      
+      - name: Build
+        run: bun run build
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
+      - name: Tag version
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+
+      - name: Commit and tag changes
+        run: |
+          git add -f ./dist
+          git commit -m "chore: build [skip ci]
+          
+          Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          " || echo "No changes to commit"
+          git tag -f "${{ steps.tag_version.outputs.new_tag }}"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+          force: true
+          tags: true
+
+      - name: Get new head commit
+        id: get_head_commit
+        run: |
+          echo "HEAD_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          commit: ${{ steps.get_head_commit.outputs.HEAD_COMMIT }}
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+      
+      - name: Get major and minor versions
+        id: get_subversions
+        run: |
+          echo "MAJOR_VERSION=$(echo "${{ steps.tag_version.outputs.new_version }}" | cut -d '.' -f 1)" >> $GITHUB_OUTPUT
+          echo "MINOR_VERSION=$(echo "${{ steps.tag_version.outputs.new_version }}" | cut -d '.' -f 2)" >> $GITHUB_OUTPUT
+      
+      - name: Update major tag
+        run: |
+          git tag -f "v${{ steps.get_subversions.outputs.MAJOR_VERSION }}" "${{ steps.get_head_commit.outputs.HEAD_COMMIT }}"
+          git push origin "v${{ steps.get_subversions.outputs.MAJOR_VERSION }}" --force
+
+      - name: Update major.minor tag
+        run: |
+          git tag -f "v${{ steps.get_subversions.outputs.MAJOR_VERSION }}.${{ steps.get_subversions.outputs.MINOR_VERSION }}" "${{ steps.get_head_commit.outputs.HEAD_COMMIT }}"
+          git push origin "v${{ steps.get_subversions.outputs.MAJOR_VERSION }}.${{ steps.get_subversions.outputs.MINOR_VERSION }}" --force
