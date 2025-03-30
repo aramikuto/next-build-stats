@@ -1,6 +1,15 @@
 {
-	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-	"files": {
-		"includes": ["**/*.ts", "**/*.tsx", "**/*.mjs", "**/*.json"]
-	}
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.mjs",
+      "**/*.json",
+      "!**/.next/**/*"
+    ]
+  },
+  "formatter": {
+    "indentStyle": "space"
+  }
 }

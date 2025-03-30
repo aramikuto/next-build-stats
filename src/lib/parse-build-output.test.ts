@@ -1,4 +1,4 @@
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import { parseBuildOutput } from "./parse-build-output";
 
 describe("parseBuildOutput", () => {
@@ -81,7 +81,8 @@ Route (app)                                 Size  First Load JS
      
      real 9.46
      user 13.86
-     sys 1.57`)
+     sys 1.57
+     `)
     ).resolves.toMatchInlineSnapshot(`
       {
         "inferredBuildTimeMs": 9460,
@@ -112,6 +113,97 @@ Route (app)                                 Size  First Load JS
           },
         ],
         "warnings": [],
+      }
+    `);
+  });
+});
+
+describe("Pages Router", () => {
+  it("parses the build output correctly", async () => {
+    expect(
+      parseBuildOutput(`yarn run v1.22.22
+$ next build
+- info Linting and checking validity of types  
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx browserslist@latest --update-db
+  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
+- info Creating an optimized production build  
+- info Compiled successfully
+- info Collecting page data  
+- info Generating static pages (6/6)
+- info Finalizing page optimization  
+
+Route (pages)                              Size     First Load JS
+┌ ○ /                                      265 B          77.6 kB
+├   /_app                                  0 B            77.4 kB
+├ ○ /404                                   271 B          77.6 kB
+├ ○ /500                                   278 B          77.6 kB
+├ ○ /about                                 261 B          77.6 kB
+├ λ /api/hello                             0 B            77.4 kB
+├ ○ /blog                                  258 B          77.6 kB
+└ ○ /blog/post/[slug]                      319 B          77.7 kB
++ First Load JS shared by all              79 kB
+  ├ chunks/framework-c3d692082d87967e.js   45.2 kB
+  ├ chunks/main-370f533ac04afdbc.js        28.5 kB
+  ├ chunks/pages/_app-ddc87574d961c5eb.js  2.86 kB
+  ├ chunks/webpack-8fa1640cc84ba8fe.js     753 B
+  └ css/ead5f2697f8080a6.css               1.67 kB
+
+λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
+○  (Static)  automatically rendered as static HTML (uses no initial props)`)
+    ).resolves.toMatchInlineSnapshot(`
+      {
+        "inferredBuildTimeMs": undefined,
+        "res": [
+          {
+            "firstLoadSizeInBytes": 79462.4,
+            "path": "/",
+            "sizeInBytes": 265,
+            "type": "Static",
+          },
+          {
+            "firstLoadSizeInBytes": 79462.4,
+            "path": "/404",
+            "sizeInBytes": 271,
+            "type": "Static",
+          },
+          {
+            "firstLoadSizeInBytes": 79462.4,
+            "path": "/500",
+            "sizeInBytes": 278,
+            "type": "Static",
+          },
+          {
+            "firstLoadSizeInBytes": 79462.4,
+            "path": "/about",
+            "sizeInBytes": 261,
+            "type": "Static",
+          },
+          {
+            "firstLoadSizeInBytes": 79257.6,
+            "path": "/api/hello",
+            "sizeInBytes": 0,
+            "type": "Server",
+          },
+          {
+            "firstLoadSizeInBytes": 79462.4,
+            "path": "/blog",
+            "sizeInBytes": 258,
+            "type": "Static",
+          },
+          {
+            "firstLoadSizeInBytes": 79564.8,
+            "path": "/blog/post/[slug]",
+            "sizeInBytes": 319,
+            "type": "Static",
+          },
+        ],
+        "warnings": [
+          "Error parsing line "├   /_app                                  0 B            77.4 kB": Unknown route type symbol: """,
+        ],
       }
     `);
   });

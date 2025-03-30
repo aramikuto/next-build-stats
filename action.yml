@@ -2,7 +2,7 @@ name: 'Next.js build stats'
 description: 'Analyzes Next.js build output and comments on pull requests with page size and type for each route'
 inputs:
   github-token:
-    description: 'GitHub token to publish comments. Default: \$\{\{ github.token \}\}.'
+    description: 'GitHub token to publish a comment. Default: \$\{\{ github.token \}\}.'
     required: true
     default: ${{ github.token }}
   build-log-file:
@@ -19,7 +19,7 @@ inputs:
     required: false
 outputs:
   route-stats:
-    description: 'Route stats in JSON format.'
+    description: 'Per-route stats in JSON format.'
 runs:
   using: 'node20'
   main: 'dist/main.js'

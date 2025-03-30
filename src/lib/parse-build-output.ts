@@ -3,7 +3,17 @@ const ROUTE_TYPES = Object.freeze({
   "●": "SSG",
   "◐": "Partial Prerender",
   ƒ: "Dynamic",
+  λ: "Server", // Pages router
 });
+
+function determineRouteType(
+  typeSymbol: string
+): (typeof ROUTE_TYPES)[keyof typeof ROUTE_TYPES] {
+  if (ROUTE_TYPES[typeSymbol as keyof typeof ROUTE_TYPES]) {
+    return ROUTE_TYPES[typeSymbol as keyof typeof ROUTE_TYPES];
+  }
+  throw new Error(`Unknown route type symbol: "${typeSymbol}"`);
+}
 
 export type RouteSizes = {
   path: string;
@@ -20,8 +30,8 @@ export async function parseBuildOutput(input: string): Promise<{
   const lines = input.split("\n").map((line) => line.trimStart());
 
   // Locate the start of the "Route" section
-  const routeStartIndex = lines.findIndex((line) =>
-    line.startsWith("Route (app)")
+  const routeStartIndex = lines.findIndex(
+    (line) => line.startsWith("Route (app)") || line.startsWith("Route (pages)")
   );
   if (routeStartIndex === -1) {
     throw new Error("Route section not found in the build log.");
@@ -52,18 +62,12 @@ export async function parseBuildOutput(input: string): Promise<{
     }
 
     try {
-      const type =
-        routePart[2] === "○"
-          ? "Static"
-          : routePart[2] === "●"
-          ? "SSG"
-          : routePart[2] === "ƒ"
-          ? "Dynamic"
-          : undefined;
-
-      if (!type) {
-        throw new Error(`Unknown route type: ${routePart}`);
+      const routerTypeSymbol = routePart[2];
+      if (routerTypeSymbol === " " && routePart.substring(4, 9) === "/_app") {
+        continue;
       }
+      const type = determineRouteType(routerTypeSymbol || "");
+
       const path = routePart.slice(3).trim();
 
       const sizeInBytes = parseSize(sizePart);
@@ -84,11 +88,11 @@ export async function parseBuildOutput(input: string): Promise<{
   }
   let inferredBuildTimeMs: number | undefined;
   if (
-    lines.at(-1)?.startsWith("sys ") &&
-    lines.at(-2)?.startsWith("user ") &&
-    lines.at(-3)?.startsWith("real ")
+    lines.at(-2)?.startsWith("sys ") &&
+    lines.at(-3)?.startsWith("user ") &&
+    lines.at(-4)?.startsWith("real ")
   ) {
-    const realTimeLine = lines.at(-3)!;
+    const realTimeLine = lines.at(-4)!;
     const buildTimeMatch = Number.parseFloat(realTimeLine.slice(4));
     inferredBuildTimeMs = buildTimeMatch * 1000;
   }
