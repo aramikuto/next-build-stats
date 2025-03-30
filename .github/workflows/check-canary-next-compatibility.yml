@@ -1,8 +1,7 @@
-# on:
-#   schedule:
-#     # Every Friday at 20:00 UTC
-#     - cron: '0 20 * * 5'
-on: [pull_request]
+on:
+  schedule:
+    # Every Friday at 20:00 UTC
+    - cron: '0 20 * * 5'
 
 name: Test Next.js Canary Compatibility
 
@@ -18,8 +17,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: test-run
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -32,7 +29,7 @@ jobs:
           command time -p npm run build 2>&1 | tee build.log
       - name: Run Next.js build stats action
         id: next-build-stats
-        uses: aramikuto/next-build-stats@test-run
+        uses: aramikuto/next-build-stats@v1
         with:
           build-log-file: ./src/test-next-app/build.log
           # dry-run: true
